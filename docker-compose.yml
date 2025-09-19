@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  rozliczenie-b2b:
+    build: .
+    # Alternatywnie użyj gotowego obrazu z Docker Hub:
+    # image: YOUR_USERNAME/rozliczenie-b2b:latest
+    container_name: rozliczenie-b2b-app
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    networks:
+      - app-network
+
+  # Opcjonalnie: nginx jako reverse proxy dla SSL
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: nginx-proxy
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx-proxy.conf:/etc/nginx/nginx.conf:ro
+  #     - ./ssl:/etc/nginx/ssl:ro
+  #   depends_on:
+  #     - rozliczenie-b2b
+  #   restart: unless-stopped
+  #   networks:
+  #     - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+# Opcjonalnie: volumes dla trwałych danych
+# volumes:
+#   app-data:
+#     driver: local
